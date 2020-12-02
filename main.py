@@ -1,9 +1,10 @@
 import pyautogui
-from subprocess import Popen, PIPE
 import applescript
 import azurelane
-import os
 import platform
+import pygetwindow as gw
+
+
 
 def resizeWindow():
     if platform.system()=='Darwin':
@@ -18,6 +19,10 @@ def resizeWindow():
         print(script.run())
 
     if platform.system()=='Windows':
+        a = gw.getWindowsWithTitle('BlueStacks')[0]
+        a.activate()
+        a.moveTo(0,0)
+        a.resizeTo(1200, 600)
 
 
 def waitUntilShow(img_name,confidence):
