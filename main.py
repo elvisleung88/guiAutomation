@@ -1,4 +1,23 @@
 import pyautogui
+from subprocess import Popen, PIPE
+import applescript
+import azurelane
+import os
+import platform
+
+def resizeWindow():
+    if platform.system()=='Darwin':
+        script = applescript.AppleScript('''
+        tell application "System Events" to tell application process "BlueStacks"
+            tell window 1
+                set {size, position} to {{1200, 600}, {0, 0}}
+            end tell
+        end tell
+        ''')
+        #need permission first
+        print(script.run())
+
+    if platform.system()=='Windows':
 
 
 def waitUntilShow(img_name,confidence):
@@ -27,9 +46,15 @@ def findAll(img_name,confidence):
     finally:
         print("Done")
 
-
-
 if __name__ == '__main__':
+    resizeWindow()
+    # x=find("test.png",confidence=0.5)
+    # x,y=pyautogui.center(x)
+    #
+    # pyautogui.click(x/2,y/2)
+    # print(x)
+    # print("asd")
+    # pyautogui.click(x / 2, y / 2)
     # print(find('chrome.png',0.6))
 
     #print(waitUntilShow('chrome.png',0.6))
