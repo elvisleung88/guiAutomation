@@ -1,58 +1,11 @@
-import pyautogui
-import applescript
-import azurelane
-import platform
-import pygetwindow as gw
+from Azurelane.azurelane import Azurelane
+from Common_func.common_func import *
 
-
-
-def resizeWindow():
-    if platform.system()=='Darwin':
-        script = applescript.AppleScript('''
-        tell application "System Events" to tell application process "BlueStacks"
-            tell window 1
-                set {size, position} to {{1200, 600}, {0, 0}}
-            end tell
-        end tell
-        ''')
-        #need permission first
-        print(script.run())
-
-    if platform.system()=='Windows':
-        a = gw.getWindowsWithTitle('BlueStacks')[0]
-        a.activate()
-        a.moveTo(0,0)
-        a.resizeTo(1200, 600)
-
-
-def waitUntilShow(img_name,confidence):
-    while find(img_name, confidence)==None:
-        pass
-    return find(img_name, confidence)
-
-def find(img_name,confidence):
-    try:
-        img = pyautogui.locateOnScreen(img_name,confidence=confidence)
-    except TypeError:
-        print("NO img")
-        return None
-    else:
-        return img
-
-
-def findAll(img_name,confidence):
-    try:
-        imgs = pyautogui.locateAllOnScreen(img_name,confidence=confidence)
-    except TypeError:
-        print("NO img")
-        return None
-    else:
-        return imgs
-    finally:
-        print("Done")
 
 if __name__ == '__main__':
     resizeWindow()
+    az = Azurelane("camp34", 10, 3, True, 5, 5)
+
     # x=find("test.png",confidence=0.5)
     # x,y=pyautogui.center(x)
     #

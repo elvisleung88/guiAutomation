@@ -56,28 +56,28 @@ def fightSelect(boss,teamA,teamB,safe):
     currentTeam = teamA  # 5 or 6
 
     while numfight < boss:
-        # if exists("1603255764271.png"):
-        #     click("1603255764271.png")
-        #     closing()
-        #     numfight = numfight + 1
-        #     currentTeam = currentTeam - 1
-        #     continue
+        if exists("1603255764271.png"):
+            click("1603255764271.png")
+            closing()
+            numfight = numfight + 1
+            currentTeam = currentTeam - 1
+            continue
 
-        # if exists("1603254579622.png"):
-        #     click(Pattern("1603254579622.png").targetOffset(-2, 70))
-        #     if not exists("1603271060760.png"):
-        #         if exists("1603256109488.png"):
-        #             click(wait("1603256109488.png", FOREVER))
-        #         continue
+        if exists("1603254579622.png"):
+            click(Pattern("1603254579622.png").targetOffset(-2, 70))
+            if not exists("1603271060760.png"):
+                if exists("1603256109488.png"):
+                    click(wait("1603256109488.png", FOREVER))
+                continue
 
-        # infoPop()
+        infoPop()
         findAdds()
         numfight = numfight + 1
         currentTeam = currentTeam - 1
 
     time.sleep(3)
-    # infoPop()
-    # findBoss(R, safe)
+    infoPop()
+    findBoss(R, safe)
 
 def opening(camp,loop,midOffset,boss,safe,teamA,teamB):
     for k in range(loop):
