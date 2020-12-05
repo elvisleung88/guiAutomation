@@ -10,7 +10,7 @@ def resizeWindow():
         script = applescript.AppleScript('''
         tell application "System Events" to tell application process "BlueStacks"
             tell window 1
-                set {size, position} to {{1200, 600}, {0, 0}}
+                set {size, position} to {{1200, 600}, {20, 20}}
             end tell
         end tell
         ''')
@@ -49,13 +49,6 @@ def click(findQueue):
         return True
     return False
 
-# def existClick(img_path,confidence):
-#     findQueue = waitUntilShow(img_path, confidence)
-#     if findQueue != None:
-#         x, y = pyautogui.center(findQueue)
-#         pyautogui.click(x, y)
-#         return True
-#     return False
     
 
 def findAll(img_path,confidence):

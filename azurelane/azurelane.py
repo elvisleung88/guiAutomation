@@ -2,17 +2,17 @@ import pyautogui
 # from pyscreeze import ImageNotFoundException
 import time
 from Common_func.common_func import *
+import numpy as np
+from scipy import spatial
 
 class Azurelane:
-
     camplist={
         "camp34": "camp34.PNG",
         "camp43": "camp43.PNG"
     }
     imagePath="Azurelane/"
-
-    enenmy=["lv3.PNG","lv2.PNG","lv1.PNG"]
-
+    enenmy=["lv1.PNG","lv2.PNG","lv3.PNG"]
+    numfight = 0
 
     def __init__(self,camp,loop,boss,safe,teamA,teamB):
         self.camp=self.camplist[camp]
@@ -22,66 +22,130 @@ class Azurelane:
         self.safe=safe
         self.teamA=teamA
         self.teamB=teamB
+        self.currentTeam = self.teamA
 
-        # self.opening()
-        # self.fightSelect()
-        self.closing()
-        # self.findAdds()
+
+        # time.sleep(5)
         # print(pyautogui.position())
 
+        self.opening()
+        # self.fightSelect()
+        # self.closing()
+        # self.findAdds()
+        # self.findBoss()
+        # self.infoPop()
+        # self.findClosest(610,314)
+
+
+
     def closing(self):
-        if click(waitUntilShow(self.imagePath + "ending1.PNG", 0.7)):
+        entry=waitUntilShow(self.imagePath + "ending1.PNG", 0.7)
+        print("...closing")
+        if entry!=None:
             time.sleep(2)
-            pyautogui.click()
-            time.sleep(3)
+            click(entry)
             if click(waitUntilShow(self.imagePath + "continue.PNG", 0.7)):
                 time.sleep(1)
-                pyautogui.click()
-                if click(waitUntilShow(self.imagePath + "endconfirm.PNG", 0.7)):
-                    time.sleep(10)
+                if click(waitUntilShow(self.imagePath + "endconfirm.PNG", 0.6)):
+                    time.sleep(6)
+
+    def walking(self,posX,posY):
+        # walking reclick if infopop
+        time.sleep(5)
+        if self.infoPop():
+            pyautogui.click(posX,posX)
+
+        #if trap
+
 
     def findAdds(self):
-        for i in self.enenmy:
-            imgs=findAll(self.imagePath+i,0.6)
+        for i,val in reversed(list(enumerate(self.enenmy,start=1))):
+            imgs=findAll(self.imagePath+val,0.6)
             if imgs:
-                print("Found lv Adds")
+                print("Found lv", i, "Adds")
                 for item in imgs:
                     pos = pyautogui.center(item)
-                    pyautogui.click(pos.x + 11, pos.y + 27)
-                    print("click Adds")
-                    # cant reach
-                    # if find(self.imagePath+"cantreach.PNG",0.7)!=None:
-                    #     continue
-
-                    time.sleep(5)
-                    if self.infoPop():
-                        pyautogui.click(pos.x + 11, pos.y + 27)
-
-                    self.closing()
+                    self.checkReach(pos.x,pos.y,11,27)
                     break
 
                 break
             else:
-                print("No lv Adds")
+                print("No lv",i, "Adds")
+
+
+    def checkReachBoss(self,x,y):
+        pyautogui.click(x, y)
+        time.sleep(1)
+        if find(self.imagePath + "cantreach.PNG", 0.5) != None:
+            nearbys = self.nearby(x, y)
+            print(nearbys)
+            pt = np.array([[x, y]])
+            distance, index = spatial.KDTree(nearbys).query(pt)
+            nearest = nearbys[spatial.KDTree(nearbys).query(pt)[1]]
+            return self.checkReach(nearest[0][0], nearest[0][1])        #not ok
+        else:
+            return True      #ok
+
+
+    def checkReach(self,x,y,xOffset=0,yOffset=0):
+        pyautogui.click(x+xOffset,y+yOffset)
+        self.walking(x+xOffset,y+yOffset)
+        time.sleep(1)
+        if find(self.imagePath+"cantreach.PNG",0.5)!=None:
+            nearbys = self.nearby(x, y)
+            pt = np.array([[x, y]])
+            nearest = nearbys[spatial.KDTree(nearbys).query(pt)[1]]
+            print("nearrrrr %i %i",nearest[0][0],nearest[0][1])
+
+
+            while abs(x - nearest[0][0])<5 and abs(y-nearest[0][1])<5:
+                distance, index = spatial.KDTree(nearbys).query(pt)
+                nearbys = np.delete(nearbys, int(index), 0)
+                nearest = nearbys[spatial.KDTree(nearbys).query(pt)[1]]
+
+            # print(nearbys)
+            time.sleep(2)
+            return self.checkReach(nearest[0][0], nearest[0][1],xOffset,yOffset) #Not Ok
+        else:
+            self.closing()
+            self.numfight += 1
+            self.currentTeam -= 1
+            return False    #ok
+
+    def nearby(self,x,y):
+        #return a point's nearby enemies
+        enemyList= np.zeros(shape=(0,2),dtype=int)
+        for i in self.enenmy:
+            imgs=findAll(self.imagePath+i,0.6)
+            if imgs:
+                for item in imgs:
+                    pos = pyautogui.center(item)
+                    itemPos = np.array([[pos.x, pos.y]])
+                    enemyList = np.vstack((enemyList, itemPos))
+        return enemyList
+
 
     def findBoss(self):
-        pass
+        time.sleep(3)
+        boss = find(self.imagePath + "boss.PNG", 0.7)
+        if boss!=None:
+            boss = pyautogui.center(boss)
+            time.sleep(1)
 
+            if not self.checkReachBoss(boss.x,boss.y):
+                self.findBoss(self)
+            self.walking(boss.x,boss.y)
+            self.closing()
+            
+        
 
     def infoPop(self):
         flag=False
 
-        #normal info pop
-        if click(find(self.imagePath+"info.PNG",0.7)):
-            flag=True
-            time.sleep(1)
-            if click(waitUntilShow(self.imagePath + "confirm.PNG", 0.7)):
-                time.sleep(1)
-                if click(waitUntilShow(self.imagePath + "confirm.PNG", 0.7)):
-                    time.sleep(1)
-                    pass
+        if click(find(self.imagePath+"continue.PNG",0.7)):
+            flag = True
 
-        #sell
+        # sell
         if click(find(self.imagePath + "sell1.PNG", 0.7)):
             flag = True
             time.sleep(1)
@@ -101,56 +165,66 @@ class Azurelane:
                                         time.sleep(1)
 
 
+        #normal info pop
+        if find(self.imagePath+"info.PNG",0.7)!=None:
+            flag=True
+            if click(waitUntilShow(self.imagePath + "confirm.PNG", 0.7)):
+                time.sleep(1)
+                if click(waitUntilShow(self.imagePath + "confirm.PNG", 0.7)):
+                    time.sleep(1)
+
+
+
+
 
     def fightSelect(self):
-        numfight = 0
-        currentTeam = self.teamA  # 5 or 6
+        while self.numfight < self.boss:
+            if find(self.imagePath + "question.PNG", 0.7)!=None:
+                pos=pyautogui.center(find(self.imagePath + "question.PNG", 0.7))
+                pyautogui.click(pos.x + 8, pos.y + 37)
+                print("clicked question")
 
-        while numfight < self.boss:
+                if find(self.imagePath + "cantreach.PNG", 0.5) != None:
+                    print("...cant reach")
+                    time.sleep(3)
+                    closetPos = self.findClosest(pos.x, pos.y)
+                    pyautogui.click(closetPos[0] + 11, closetPos[1] + 27)
+                    self.walking(closetPos[0] + 11, closetPos[1] + 27)
+                    self.closing()
+                    pyautogui.click(pos.x + 8, pos.y + 37)
 
-
-            # if exists("1603255764271.png"):
-            #     click("1603255764271.png")
-            #     closing()
-            #     numfight = numfight + 1
-            #     currentTeam = currentTeam - 1
-            #     continue
-            #
-            # if exists("1603254579622.png"):
-            #     click(Pattern("1603254579622.png").targetOffset(-2, 70))
-            #     if not exists("1603271060760.png"):
-            #         if exists("1603256109488.png"):
-            #             click(wait("1603256109488.png", FOREVER))
-            #         continue
+                time.sleep(5)
+                if self.infoPop():
+                    click(find(self.imagePath + "question.PNG", 0.7))
+                else:
+                    time.sleep(3) #new enemy on map
 
             self.infoPop()
+            time.sleep(1)
             self.findAdds()
-
-            numfight+=1
-            currentTeam-=1
 
         time.sleep(3)
         self.infoPop()
+        self.findBoss()
 
 
 
     def opening(self):
-        # for k in range(self.loop):
+        for k in range(self.loop):
+            self.infoPop()
+            time.sleep(1)
             if find(self.imagePath+"icon.PNG",0.5) != None:
                 x,y=pyautogui.center(find(self.imagePath+"icon.PNG",0.5))
                 pyautogui.click(x, y)
             time.sleep(1)
 
-            x, y = pyautogui.center(find(self.imagePath+self.camp, 0.8))
-            pyautogui.click(x, y)
+            click(find(self.imagePath+self.camp, 0.9))
             time.sleep(1)
 
-            x, y = pyautogui.center(find(self.imagePath+"start1.PNG", 0.8))
-            pyautogui.click(x, y)
+            click(find(self.imagePath+"start1.PNG", 0.8))
             time.sleep(1)
 
-            x, y = pyautogui.center(find(self.imagePath+"start2.PNG", 0.8))
-            pyautogui.click(x, y)
+            click(find(self.imagePath+"start2.PNG", 0.8))
             time.sleep(4)
 
             x, y = pyautogui.center(find(self.imagePath+"pos.PNG", 0.8))
