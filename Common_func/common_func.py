@@ -5,6 +5,16 @@ import pygetwindow as gw
 import time
 from pyscreeze import ImageNotFoundException
 
+
+
+#modify payautogui click x,y depend on OS version
+def pyClick(x,y):
+    if platform.system() == 'Windows':
+        pyautogui.click(x, y)
+    else:
+        pyautogui.click(x/2, y/2)
+
+#change window to 1200x600
 def resizeWindow():
     if platform.system()=='Darwin':
         script = applescript.AppleScript('''
@@ -25,8 +35,9 @@ def resizeWindow():
         print("..resizeWindow")
 
 
+#wait image until show up. last for 3 mins terminate
 def waitUntilShow(img_path,confidence):
-    timeout = time.time() + 90*3
+    timeout = time.time() + 60*3
     while find(img_path, confidence) == None:
         if time.time() > timeout:
             break
@@ -45,11 +56,9 @@ def find(img_path,confidence):
 def click(findQueue):
     if findQueue != None:
         x, y = pyautogui.center(findQueue)
-        pyautogui.click(x, y)
+        pyClick(x,y)
         return True
     return False
-
-    
 
 def findAll(img_path,confidence):
     try:

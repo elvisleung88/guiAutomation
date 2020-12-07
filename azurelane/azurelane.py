@@ -53,7 +53,7 @@ class Azurelane:
         # walking reclick if infopop
         time.sleep(5)
         if self.infoPop():
-            pyautogui.click(posX,posX)
+            pyClick(posX,posX)
 
         #if trap
 
@@ -74,7 +74,7 @@ class Azurelane:
 
 
     def checkReachBoss(self,x,y):
-        pyautogui.click(x, y)
+        pyClick(x, y)
         time.sleep(1)
         if find(self.imagePath + "cantreach.PNG", 0.5) != None:
             nearbys = self.nearby(x, y)
@@ -88,7 +88,7 @@ class Azurelane:
 
 
     def checkReach(self,x,y,xOffset=0,yOffset=0):
-        pyautogui.click(x+xOffset,y+yOffset)
+        pyClick(x+xOffset,y+yOffset)
         self.walking(x+xOffset,y+yOffset)
         time.sleep(1)
         if find(self.imagePath+"cantreach.PNG",0.5)!=None:
@@ -181,17 +181,17 @@ class Azurelane:
         while self.numfight < self.boss:
             if find(self.imagePath + "question.PNG", 0.7)!=None:
                 pos=pyautogui.center(find(self.imagePath + "question.PNG", 0.7))
-                pyautogui.click(pos.x + 8, pos.y + 37)
+                pyClick(pos.x + 8, pos.y + 37)
                 print("clicked question")
 
                 if find(self.imagePath + "cantreach.PNG", 0.5) != None:
                     print("...cant reach")
                     time.sleep(3)
                     closetPos = self.findClosest(pos.x, pos.y)
-                    pyautogui.click(closetPos[0] + 11, closetPos[1] + 27)
+                    pyClick(closetPos[0] + 11, closetPos[1] + 27)
                     self.walking(closetPos[0] + 11, closetPos[1] + 27)
                     self.closing()
-                    pyautogui.click(pos.x + 8, pos.y + 37)
+                    pyClick(pos.x + 8, pos.y + 37)
 
                 time.sleep(5)
                 if self.infoPop():
@@ -209,13 +209,14 @@ class Azurelane:
 
 
 
+
     def opening(self):
         for k in range(self.loop):
             self.infoPop()
             time.sleep(1)
             if find(self.imagePath+"icon.PNG",0.5) != None:
                 x,y=pyautogui.center(find(self.imagePath+"icon.PNG",0.5))
-                pyautogui.click(x, y)
+                pyClick(x, y)
             time.sleep(1)
 
             click(find(self.imagePath+self.camp, 0.9))
