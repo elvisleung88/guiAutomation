@@ -10,7 +10,6 @@ class Azurelane:
         "camp34": "camp34.PNG",
         "camp43": "camp43.PNG"
     }
-    imagePath="Azurelane/"
     enenmy=["lv1.PNG","lv2.PNG","lv3.PNG"]
     numfight = 0
 
@@ -23,10 +22,8 @@ class Azurelane:
         self.teamA=teamA
         self.teamB=teamB
         self.currentTeam = self.teamA
-
-
-        self.debug()
-
+        self.imagePath = "Azurelane/Windows/" if platform.system()=='Windows' else "Azurelane/Darwin/"
+        # self.debug()
         # self.opening()
         # self.fightSelect()
         # self.closing()
@@ -35,21 +32,11 @@ class Azurelane:
         # self.infoPop()
         # self.findClosest(610,314)
 
-    def setImgPath(self):
 
-        self.imagePath = "Azurelane/"
 
     def debug(self):
         # time.sleep(5)
-        # print(pyautogui.position())
-        # pyautogui.moveTo(20, 20)
         print(pyautogui.size())
-        pyClick(find(self.imagePath+'icon.PNG',0.7))
-        # print(pyautogui.position())
-
-        if pyClick(find(self.imagePath +'camp43_d.png' , 0.6)):
-            print("okm")
-
 
         # if find(self.imagePath + "debug.PNG", 0.5) != None:
         #     x, y = pyautogui.center(find(self.imagePath + "icon.PNG", 0.5))
@@ -67,8 +54,8 @@ class Azurelane:
 
 
     def closing(self):
-        entry=waitUntilShow(self.imagePath + "ending1.PNG", 0.7)
         print("...closing")
+        entry=waitUntilShow(self.imagePath + "ending1.PNG", 0.7)
         if entry!=None:
             time.sleep(2)
             click(entry)
@@ -239,28 +226,23 @@ class Azurelane:
 
 
     def opening(self):
-        for k in range(self.loop):
-            self.infoPop()
+        # for k in range(self.loop):
+        # self.infoPop()
+        # time.sleep(1)
+
+        # if click(find(self.imagePath + 'icon.PNG', 0.6)):
+        #     time.sleep(1)
+
+        if click(find(self.imagePath + 'icon.PNG', 0.6)):
             time.sleep(1)
-
-            if find(self.imagePath+"icon.PNG",0.5) != None:
-                x,y=pyautogui.center(find(self.imagePath+"icon.PNG",0.5))
-                print(x,y)
-                pyautogui.click(x/2, y/2)
-
-            time.sleep(1)
-            if find(self.imagePath + self.camp, 0.9)!=None:
-                click(find(self.imagePath+self.camp, 0.9))
-            time.sleep(1)
-            return
-
-            click(find(self.imagePath+"start1.PNG", 0.8))
-            time.sleep(1)
-
-            click(find(self.imagePath+"start2.PNG", 0.8))
-            time.sleep(4)
-
-            x, y = pyautogui.center(find(self.imagePath+"pos.PNG", 0.8))
-            pyautogui.moveTo(x,y-100)
-            pyautogui.drag(0, self.midOffset,0.5, button='left')
-            self.fightSelect()
+            if click(find(self.imagePath + self.camp, 0.9)):
+                time.sleep(1)
+                if click(find(self.imagePath + "start1.PNG", 0.8)):
+                    time.sleep(1)
+                    if click(find(self.imagePath+"start2.PNG", 0.8)):
+                        time.sleep(4)
+                        x, y = pyautogui.center(find(self.imagePath + "pos.PNG", 0.8))
+                        x, y = getXY(x, y)
+                        pyautogui.moveTo(x, y - 100)
+                        pyautogui.drag(0, self.midOffset, 0.5, button='left')
+                        # self.fightSelect()

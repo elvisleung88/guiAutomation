@@ -6,37 +6,19 @@ import time
 from pyscreeze import ImageNotFoundException
 
 
-
-
-
-
-#modify payautogui click x,y depend on OS version
-def pyClick(findQueue):
-    if platform.system() == 'Windows':
-        if findQueue != None:
-            x, y = pyautogui.center(findQueue)
-            pyautogui.click(x, y)
-            return True
-        return False
-    else:
-        if findQueue != None:
-            x, y = pyautogui.center(findQueue)
-            pyautogui.click(x/2, y/2)
-            return True
-        return False
-
 #change window to 1200x600
 def resizeWindow():
     if platform.system()=='Darwin':
         script = applescript.AppleScript('''
         tell application "System Events" to tell application process "BlueStacks"
             tell window 1
-                set {size, position} to {{1200, 600}, {0, 120}}
+                set {size, position} to {{1200, 600}, {0, 30}}
             end tell
         end tell
         ''')
         #need permission first
         print(script.run())
+        #1680*1050
 
     if platform.system()=='Windows':
         a = gw.getWindowsWithTitle('BlueStacks')[0]
@@ -44,6 +26,7 @@ def resizeWindow():
         a.moveTo(0,0)
         a.resizeTo(1200, 600)
         print("..resizeWindow")
+        #1920*1080
 
 
 #wait image until show up. last for 3 mins terminate
@@ -67,9 +50,15 @@ def find(img_path,confidence):
 def click(findQueue):
     if findQueue != None:
         x, y = pyautogui.center(findQueue)
-        pyautogui.click(x,y)
+        pyautogui.click(getXY(x,y))
         return True
     return False
+
+def getXY(x,y):
+    if (platform.system() == 'Windows'):
+        return x,y
+    else:
+        return x/2,y/2
 
 def findAll(img_path,confidence):
     try:
