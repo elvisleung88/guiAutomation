@@ -31,7 +31,7 @@ def resizeWindow():
         script = applescript.AppleScript('''
         tell application "System Events" to tell application process "BlueStacks"
             tell window 1
-                set {size, position} to {{1200, 600}, {20, 20}}
+                set {size, position} to {{1200, 600}, {0, 120}}
             end tell
         end tell
         ''')
@@ -41,7 +41,7 @@ def resizeWindow():
     if platform.system()=='Windows':
         a = gw.getWindowsWithTitle('BlueStacks')[0]
         a.activate()
-        a.moveTo(20,20)
+        a.moveTo(0,0)
         a.resizeTo(1200, 600)
         print("..resizeWindow")
 

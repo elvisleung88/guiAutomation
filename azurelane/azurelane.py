@@ -40,8 +40,26 @@ class Azurelane:
         # print(pyautogui.position())
         # pyautogui.moveTo(20, 20)
         print(pyautogui.size())
-        pyClick(find(self.imagePath+'debug.png',0.7))
-        print(pyautogui.position())
+        pyClick(find(self.imagePath+'debug1.png',0.7))
+        # print(pyautogui.position())
+
+        if pyClick(find(self.imagePath +'camp43_d.png' , 0.9)):
+            print("okm")
+
+
+        # if find(self.imagePath + "debug.PNG", 0.5) != None:
+        #     x, y = pyautogui.center(find(self.imagePath + "icon.PNG", 0.5))
+        #     print(x, y)
+        #     pyautogui.click(x / 2, y / 2)
+        #
+        # time.sleep(1)
+        # if find(self.imagePath + self.camp, 0.9) != None:
+        #     click(find(self.imagePath + self.camp, 0.9))
+        # time.sleep(1)
+        # return
+        #
+        # click(find(self.imagePath + "start1.PNG", 0.8))
+        # time.sleep(1)
 
 
     def closing(self):
@@ -220,6 +238,7 @@ class Azurelane:
         for k in range(self.loop):
             self.infoPop()
             time.sleep(1)
+
             if find(self.imagePath+"icon.PNG",0.5) != None:
                 x,y=pyautogui.center(find(self.imagePath+"icon.PNG",0.5))
                 print(x,y)
