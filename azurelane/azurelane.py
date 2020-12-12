@@ -35,15 +35,19 @@ class Azurelane:
         # self.infoPop()
         # self.findClosest(610,314)
 
+    def setImgPath(self):
+
+        self.imagePath = "Azurelane/"
+
     def debug(self):
         # time.sleep(5)
         # print(pyautogui.position())
         # pyautogui.moveTo(20, 20)
         print(pyautogui.size())
-        pyClick(find(self.imagePath+'debug1.png',0.7))
+        pyClick(find(self.imagePath+'icon.PNG',0.7))
         # print(pyautogui.position())
 
-        if pyClick(find(self.imagePath +'camp43_d.png' , 0.9)):
+        if pyClick(find(self.imagePath +'camp43_d.png' , 0.6)):
             print("okm")
 
 
