@@ -7,12 +7,23 @@ from pyscreeze import ImageNotFoundException
 
 
 
+
+
+
 #modify payautogui click x,y depend on OS version
-def pyClick(x,y):
+def pyClick(findQueue):
     if platform.system() == 'Windows':
-        pyautogui.click(x, y)
+        if findQueue != None:
+            x, y = pyautogui.center(findQueue)
+            pyautogui.click(x, y)
+            return True
+        return False
     else:
-        pyautogui.click(x/2, y/2)
+        if findQueue != None:
+            x, y = pyautogui.center(findQueue)
+            pyautogui.click(x/2, y/2)
+            return True
+        return False
 
 #change window to 1200x600
 def resizeWindow():
@@ -56,7 +67,7 @@ def find(img_path,confidence):
 def click(findQueue):
     if findQueue != None:
         x, y = pyautogui.center(findQueue)
-        pyClick(x,y)
+        pyautogui.click(x,y)
         return True
     return False
 

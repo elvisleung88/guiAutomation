@@ -25,10 +25,9 @@ class Azurelane:
         self.currentTeam = self.teamA
 
 
-        # time.sleep(5)
-        # print(pyautogui.position())
+        self.debug()
 
-        self.opening()
+        # self.opening()
         # self.fightSelect()
         # self.closing()
         # self.findAdds()
@@ -36,6 +35,13 @@ class Azurelane:
         # self.infoPop()
         # self.findClosest(610,314)
 
+    def debug(self):
+        # time.sleep(5)
+        # print(pyautogui.position())
+        # pyautogui.moveTo(20, 20)
+        print(pyautogui.size())
+        pyClick(find(self.imagePath+'debug.png',0.7))
+        print(pyautogui.position())
 
 
     def closing(self):
@@ -53,7 +59,7 @@ class Azurelane:
         # walking reclick if infopop
         time.sleep(5)
         if self.infoPop():
-            pyClick(posX,posX)
+            pyautogui.click(posX,posX)
 
         #if trap
 
@@ -74,7 +80,7 @@ class Azurelane:
 
 
     def checkReachBoss(self,x,y):
-        pyClick(x, y)
+        pyautogui.click(x, y)
         time.sleep(1)
         if find(self.imagePath + "cantreach.PNG", 0.5) != None:
             nearbys = self.nearby(x, y)
@@ -88,7 +94,7 @@ class Azurelane:
 
 
     def checkReach(self,x,y,xOffset=0,yOffset=0):
-        pyClick(x+xOffset,y+yOffset)
+        pyautogui.click(x+xOffset,y+yOffset)
         self.walking(x+xOffset,y+yOffset)
         time.sleep(1)
         if find(self.imagePath+"cantreach.PNG",0.5)!=None:
@@ -181,17 +187,17 @@ class Azurelane:
         while self.numfight < self.boss:
             if find(self.imagePath + "question.PNG", 0.7)!=None:
                 pos=pyautogui.center(find(self.imagePath + "question.PNG", 0.7))
-                pyClick(pos.x + 8, pos.y + 37)
+                pyautogui.click(pos.x + 8, pos.y + 37)
                 print("clicked question")
 
                 if find(self.imagePath + "cantreach.PNG", 0.5) != None:
                     print("...cant reach")
                     time.sleep(3)
                     closetPos = self.findClosest(pos.x, pos.y)
-                    pyClick(closetPos[0] + 11, closetPos[1] + 27)
+                    pyautogui.click(closetPos[0] + 11, closetPos[1] + 27)
                     self.walking(closetPos[0] + 11, closetPos[1] + 27)
                     self.closing()
-                    pyClick(pos.x + 8, pos.y + 37)
+                    pyautogui.click(pos.x + 8, pos.y + 37)
 
                 time.sleep(5)
                 if self.infoPop():
@@ -216,11 +222,14 @@ class Azurelane:
             time.sleep(1)
             if find(self.imagePath+"icon.PNG",0.5) != None:
                 x,y=pyautogui.center(find(self.imagePath+"icon.PNG",0.5))
-                pyClick(x, y)
-            time.sleep(1)
+                print(x,y)
+                pyautogui.click(x/2, y/2)
 
-            click(find(self.imagePath+self.camp, 0.9))
             time.sleep(1)
+            if find(self.imagePath + self.camp, 0.9)!=None:
+                click(find(self.imagePath+self.camp, 0.9))
+            time.sleep(1)
+            return
 
             click(find(self.imagePath+"start1.PNG", 0.8))
             time.sleep(1)
